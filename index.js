@@ -5,23 +5,23 @@ const {
 const {
   checkVariableValueByExpectedValue,
 } = require("./util/helpers/checkVariableValueByExpectedValue");
-const { findExpression } = require("./util/helpers/findExpression");
+const { findAssignExpression } = require("./util/helpers/findAssignExpression");
 
-const js1 = `
-let word;
-const hello = "Hello Word";
-word = hello;
-`;
-console.dir(check(js1));
-
-// const js2 = `
+// const js1 = `
 // let word;
-// const hello = "Hello Word"
+// const hello = "Hello Word";
 // word = hello;
-// const refWord = document.querySelector('.word');
-// ref.textContent = word
 // `;
-// console.dir(check(js2));
+// console.dir(check(js1));
+
+const js2 = `
+let word;
+const hello = "Hello Word"
+word = hello;
+const refWord = document.querySelector('.word');
+ref.textContent = word
+`;
+console.dir(check(js2));
 
 // const js3 = `
 // const result = 12 + 24 / 3;
@@ -84,17 +84,18 @@ function check(code) {
 
     const results = [
       //============================js1 ===========================
-      findVariableByNameAndType("let", "word", ast),
-      findVariableByNameAndType("const", "hello", ast),
-      checkVariableValueByExpectedValue("const", "hello", "Hello Word", ast),
-      // checkVariableValueByExpectedValue("let", "word", "Hello world", ast),
-      // findExpression(),
-
-      //============================js2 ============================
       // findVariableByNameAndType("let", "word", ast),
       // findVariableByNameAndType("const", "hello", ast),
       // checkVariableValueByExpectedValue("const", "hello", "Hello Word", ast),
-      // findVariableByNameAndType("const", "refWord", ast),
+      // checkVariableValueByExpectedValue("let", "word", "Hello world", ast),
+      // findAssignExpression("word", "hello", ast)
+
+      //============================js2 ============================
+      findVariableByNameAndType("let", "word", ast),
+      findVariableByNameAndType("const", "hello", ast),
+      checkVariableValueByExpectedValue("const", "hello", "Hello Word", ast),
+      findVariableByNameAndType("const", "refWord", ast),
+      findAssignExpression("ref.textContent", "word", ast)
     ];
 
     results.map(({ success, message }) => {
